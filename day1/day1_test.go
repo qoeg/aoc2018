@@ -5,23 +5,20 @@ import (
 	"testing"
 )
 
-var exampleAA = []int{1, -2, 3, 1}
+func TestCalculateFreq_Example1(t *testing.T) {
+	changes := []int{1, -2, 3, 1}
 
-var exampleBA = []int{1, -1}
-var exampleBB = []int{3, 3, 4, -2, -4}
-var exampleBC = []int{-6, 3, 8, 5, -6}
-var exampleBD = []int{7, 7, -2, -7, -4}
-
-func TestCalculateFreq_ExampleAA(t *testing.T) {
-	result := CalculateFreq(0, exampleAA)
+	result := CalculateFreq(0, changes)
 	if result != 3 {
 		t.Logf("Expected frequency %d, but got %d\n", 3, result)
 		t.Fail()
 	}
 }
 
-func TestCalibrateFreq_ExampleBB(t *testing.T) {
-	result := CalibrateFreq(0, exampleBB)
+func TestCalibrateFreq_Example1(t *testing.T) {
+	changes := []int{3, 3, 4, -2, -4}
+	
+	result := CalibrateFreq(0, changes)
 	fmt.Printf("*** Result: %d\n", result)
 
 	if result != 10 {
@@ -30,8 +27,10 @@ func TestCalibrateFreq_ExampleBB(t *testing.T) {
 	}
 }
 
-func TestCalibrateFreq_ExampleBC(t *testing.T) {
-	result := CalibrateFreq(0, exampleBC)
+func TestCalibrateFreq_Example2(t *testing.T) {
+	changes := []int{-6, 3, 8, 5, -6}
+	
+	result := CalibrateFreq(0, changes)
 	fmt.Printf("*** Result: %d\n", result)
 
 	if result != 5 {
@@ -40,8 +39,10 @@ func TestCalibrateFreq_ExampleBC(t *testing.T) {
 	}
 }
 
-func TestCalibrateFreq_ExampleBD(t *testing.T) {
-	result := CalibrateFreq(0, exampleBD)
+func TestCalibrateFreq_Example3(t *testing.T) {
+	changes := []int{7, 7, -2, -7, -4}
+	
+	result := CalibrateFreq(0, changes)
 	fmt.Printf("*** Result: %d\n", result)
 
 	if result != 14 {
