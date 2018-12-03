@@ -5,10 +5,26 @@ import (
 
 	"github.com/qoeg/aoc2018/day1"
 	"github.com/qoeg/aoc2018/day2"
+	"github.com/qoeg/aoc2018/day3"
 )
 
 func main() {
-	d2()
+	d3()
+}
+
+func d3() {
+	fmt.Print("Day 3\n")
+
+	claims := []day3.Claim{}
+	for _, input := range day3.Input {
+		claims = append(claims, day3.ParseInput(input))
+	}
+
+	answer1 := day3.GetNumIntersectingSqIn(claims)
+	fmt.Printf("Puzzle 1 Answer: %v\n", answer1)
+
+	answer2 := day3.GetCleanClaim(claims)
+	fmt.Printf("Puzzle 2 Answer: %v\n", answer2.ID)
 }
 
 func d2() {
