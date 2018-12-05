@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	d5()
+	d3()
 }
 
 func d5() {

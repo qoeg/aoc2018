@@ -66,27 +66,23 @@ func DoClaimsIntersect(c1 Claim, c2 Claim) (Extent, bool) {
 
 // GetNumIntersectingSqIn ...
 func GetNumIntersectingSqIn(claims []Claim) int {
-	squares := map[int]map[int]int{}
+	cells := map[int]map[int]int{}
 
+	count := 0
 	for _, claim := range claims {
 		for x := claim.x; x < claim.x+claim.width; x++ {
 			for y := claim.y; y < claim.y+claim.height; y++ {
-				if squares[x] == nil {
-					squares[x] = map[int]int{}
+				if cells[x] == nil {
+					cells[x] = map[int]int{}
 				}
 
-				squares[x][y]++
+				cells[x][y]++
+
+				if cells[x][y] == 2 {
+					count++
+				}
 			}
 		} 
-	}
-
-	count := 0
-	for _, col := range squares {
-		for _, cell := range col {
-			if cell >= 2 {
-				count++
-			}
-		}
 	}
 
 	return count
