@@ -6,10 +6,32 @@ import (
 	"github.com/qoeg/aoc2018/day1"
 	"github.com/qoeg/aoc2018/day2"
 	"github.com/qoeg/aoc2018/day3"
+	"github.com/qoeg/aoc2018/day4"
 )
 
 func main() {
-	d3()
+	d4()
+}
+
+func d4() {
+	fmt.Print("Day 4\n")
+
+	guards := day4.GetGuardSchedules(day4.Input)
+
+	bestGuard := day4.MostSleepy(guards)
+	minute, _ := day4.MostCommonMinute(bestGuard)
+	fmt.Printf("Puzzle 1 Answer: %v\n", bestGuard.ID * minute)
+
+	var id, bestMinute, maxFreq int
+	for _, g := range guards {
+		m, f := day4.MostCommonMinute(g)
+		if f > maxFreq {
+			maxFreq = f
+			bestMinute = m
+			id = g.ID
+		}
+	}
+	fmt.Printf("Puzzle 2 Answer: %v\n", id * bestMinute)
 }
 
 func d3() {
