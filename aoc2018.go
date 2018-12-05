@@ -7,10 +7,21 @@ import (
 	"github.com/qoeg/aoc2018/day2"
 	"github.com/qoeg/aoc2018/day3"
 	"github.com/qoeg/aoc2018/day4"
+	"github.com/qoeg/aoc2018/day5"
 )
 
 func main() {
-	d4()
+	d5()
+}
+
+func d5() {
+	fmt.Print("Day 5\n")
+
+	output := day5.React(day5.Input)
+	fmt.Printf("Puzzle 1 Answer: %v\n", len(output))
+
+	unit, shortest := day5.FindOptimalUnit(day5.Input)
+	fmt.Printf("Puzzle 2 Answer: %v (with unit %s/%s)\n", len(shortest), string(unit), string(unit+32))
 }
 
 func d4() {
