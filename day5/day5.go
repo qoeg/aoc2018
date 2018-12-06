@@ -5,7 +5,6 @@ import (
 )
 
 func removeUnitPair(input string, unit rune) string {
-	// TODO: optimize
 	runes := []rune(input)
 	for i := 0; i < len(runes); i++ {
 		if runes[i] == unit || runes[i] == unit+32 {
@@ -19,22 +18,41 @@ func removeUnitPair(input string, unit rune) string {
 
 // FindOptimalUnit tests all of the possible units by reacting them then, finding the best one
 func FindOptimalUnit(input string) (rune, string) {
-	unit := rune(65)
-	polymer := ""
-	
-	min := len(input)
+	type result struct {
+		unit rune
+		polymer string
+	}
+	results := make(chan result)
+
 	for i := 65; i <= 90; i++ {
-		reduced := removeUnitPair(input, rune(i))
-		result := React(reduced)
-		
-		if len(result) < min {
-			min = len(result)
-			unit = rune(i)
-			polymer = result
+		go func(unit int){
+			primed := removeUnitPair(input, rune(unit))
+			reduced := React(primed)
+
+			results <- result{
+				unit: rune(unit),
+				polymer: reduced,
+			}
+		}(i)
+	}
+
+	cnt := 0
+	opt := result{}
+	min := len(input)
+
+	for r := range results {
+		if len(r.polymer) < min {
+			min = len(r.polymer)
+			opt = r
+		}
+
+		cnt++
+		if cnt >= 26 {
+			break
 		}
 	}
 	
-	return unit, polymer
+	return opt.unit, opt.polymer
 }
 
 // React causes the unit reaction which reduces the polymer
