@@ -9,10 +9,21 @@ import (
 	"github.com/qoeg/aoc2018/day4"
 	"github.com/qoeg/aoc2018/day5"
 	"github.com/qoeg/aoc2018/day6"
+	"github.com/qoeg/aoc2018/day7"
 )
 
 func main() {
-	d6()
+	d7()
+}
+
+func d7() {
+	fmt.Print("Day 7\n")
+
+	steps, _ := day7.OrderSteps(day7.Input, 1, 0)
+	fmt.Printf("Puzzle 1 Answer: %v\n", steps)
+
+	_, seconds := day7.OrderSteps(day7.Input, 5, 60)
+	fmt.Printf("Puzzle 2 Answer: %v\n", seconds)
 }
 
 func d6() {
