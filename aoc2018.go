@@ -8,10 +8,21 @@ import (
 	"github.com/qoeg/aoc2018/day3"
 	"github.com/qoeg/aoc2018/day4"
 	"github.com/qoeg/aoc2018/day5"
+	"github.com/qoeg/aoc2018/day6"
 )
 
 func main() {
-	d5()
+	d6()
+}
+
+func d6() {
+	fmt.Print("Day 6\n")
+
+	areaSize := day6.LargestAreaSize(day6.Input)
+	fmt.Printf("Puzzle 1 Answer: %v\n", areaSize)
+
+	regSize := day6.SafeRegionSize(day6.Input, 10000)
+	fmt.Printf("Puzzle 2 Answer: %v\n", regSize)
 }
 
 func d5() {
