@@ -10,6 +10,21 @@ type step struct {
 	duration int
 }
 
+func all(slice, test []*step) bool {
+	for i := range slice {
+		found := false
+		for j := range test {
+			if slice[i] == test[j] {
+				found = true
+			}
+		}
+		if !found {
+			return false
+		}
+	}
+	return true
+}
+
 func remove(slice *[]*step, item *step) *step {
 	s := *slice
 	for i, v := range s {
@@ -66,11 +81,7 @@ func parseSteps(input []string, baseDuration int) map[string]*step {
 
 func updateReadyState(todos *map[string]*step, ready *[]*step, done []*step) {
 	for _, step := range *todos {
-		if len(done) > 0 {
-			remove(&step.pre, done[len(done)-1])
-		}
-
-		if len(step.pre) == 0 {
+		if all(step.pre, done) {
 			*ready = append(*ready, step)
 			delete(*todos, step.char)
 		}
