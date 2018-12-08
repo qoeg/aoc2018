@@ -10,10 +10,22 @@ import (
 	"github.com/qoeg/aoc2018/day5"
 	"github.com/qoeg/aoc2018/day6"
 	"github.com/qoeg/aoc2018/day7"
+	"github.com/qoeg/aoc2018/day8"
 )
 
 func main() {
-	d7()
+	d8()
+}
+
+func d8() {
+	fmt.Print("Day 8\n")
+
+	node, _ := day8.ParseNode(day8.Input)
+	sum := day8.SumMetadata(node)
+	fmt.Printf("Puzzle 1 Answer: %v\n", sum)
+
+	valsum := day8.SumValues(node)
+	fmt.Printf("Puzzle 2 Answer: %v\n", valsum)
 }
 
 func d7() {
