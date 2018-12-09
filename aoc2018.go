@@ -11,10 +11,22 @@ import (
 	"github.com/qoeg/aoc2018/day6"
 	"github.com/qoeg/aoc2018/day7"
 	"github.com/qoeg/aoc2018/day8"
+	"github.com/qoeg/aoc2018/day9"
 )
 
 func main() {
-	d8()
+	d9()
+}
+
+func d9() {
+	fmt.Print("Day 9\n")
+
+	game1 := day9.NewGameStr(day9.Input)
+	fmt.Printf("Puzzle 1 Answer: %v\n", day9.GetHighScoreFast(game1))
+
+	game2 := day9.NewGameStr(day9.Input)
+	game2.LastMarble *= 100
+	fmt.Printf("Puzzle 2 Answer: %v\n", day9.GetHighScoreFast(game2))
 }
 
 func d8() {
