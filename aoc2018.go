@@ -13,10 +13,22 @@ import (
 	"github.com/qoeg/aoc2018/day8"
 	"github.com/qoeg/aoc2018/day9"
 	"github.com/qoeg/aoc2018/day10"
+	"github.com/qoeg/aoc2018/day11"
 )
 
 func main() {
-	d10()
+	d11()
+}
+
+func d11() {
+	fmt.Print("Day 11\n")
+
+	g := day11.NewGrid(day11.Input, 300, 300)
+	sq1, _ := day11.FindLargestSquare(g, 3)
+	fmt.Printf("Puzzle 1 Answer: %v\n", sq1.Coordinate)
+
+	sq2 := day11.FindAnyLargestSquare(g)
+	fmt.Printf("Puzzle 2 Answer: %v\n", sq2)
 }
 
 func d10() {
