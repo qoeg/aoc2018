@@ -18,20 +18,22 @@ type Square struct {
 type Grid struct {
 	SN int
 	Cells map[int]map[int]int
+	size int
 }
 
-func NewGrid(sn, width, height int) Grid {
+func NewGrid(sn, size int) Grid {
 	g := Grid{
 		SN: sn,
 		Cells: make(map[int]map[int]int),
+		size: size,
 	}
 	
-	for x := 1; x <= width; x++ {
+	for x := 1; x <= size; x++ {
 		if _, ok := g.Cells[x]; !ok {
-			g.Cells[x] = make(map[int]int, height)
+			g.Cells[x] = make(map[int]int, size)
 		}
 
-		for y := 1; y <= height; y++ {
+		for y := 1; y <= size; y++ {
 			g.Cells[x][y] = powerLevel(x, y, sn)
 		}
 	}
@@ -51,10 +53,6 @@ func powerLevel(x, y, sn int) int {
 	return hundredth(pl) - 5
 }
 
-func printCell(c Coordinate) {
-	fmt.Printf("Cell: (%d,%d)\n", c.x, c.y)
-}
-
 func sumSquare(g Grid, sq Square) int {
 	sum := 0
 	maxX, maxY := (sq.x + sq.Size), (sq.y + sq.Size)
@@ -67,18 +65,19 @@ func sumSquare(g Grid, sq Square) int {
 }
 
 func FindAnyLargestSquare(g Grid) Square {
-	ch := make(chan Square, 300)
+	ch := make(chan Square, g.size)
 
-	for size := 1; size <= 300; size++ {
-		fmt.Printf("Processing size: %d\n", size)
+	for size := 1; size <= g.size; size++ {
 		go func(size int) {
+			fmt.Printf("Processing size: %d\n", size)
 			sq, _ := FindLargestSquare(g, size)
+			fmt.Printf("Completed size: %d\n", size)
 			ch<- sq
 		}(size)
 	}
 
 	max := Square{}
-	for i := 0; i < 300; i++ {
+	for i := 0; i < g.size; i++ {
 		sq := <- ch
 		if sq.sum > max.sum {
 			max = sq

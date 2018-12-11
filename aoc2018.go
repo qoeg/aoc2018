@@ -23,7 +23,7 @@ func main() {
 func d11() {
 	fmt.Print("Day 11\n")
 
-	g := day11.NewGrid(day11.Input, 300, 300)
+	g := day11.NewGrid(day11.Input, 300)
 	sq1, _ := day11.FindLargestSquare(g, 3)
 	fmt.Printf("Puzzle 1 Answer: %v\n", sq1.Coordinate)
 

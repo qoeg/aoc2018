@@ -30,7 +30,7 @@ func Test_powerLevel71(t *testing.T) {
 }
 
 func Test_FindLargestSquare18(t *testing.T) {
-	g := NewGrid(18, 300, 300)
+	g := NewGrid(18, 300)
 	s, p := FindLargestSquare(g, 3)
 
 	if (s.Coordinate != Coordinate{33, 45}) {
@@ -43,7 +43,7 @@ func Test_FindLargestSquare18(t *testing.T) {
 }
 
 func Test_FindLargestSquare42(t *testing.T) {
-	g := NewGrid(42, 300, 300)
+	g := NewGrid(42, 300)
 	s, p := FindLargestSquare(g, 3)
 
 	if (s.Coordinate != Coordinate{21, 61}) {
