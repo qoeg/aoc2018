@@ -12,10 +12,18 @@ import (
 	"github.com/qoeg/aoc2018/day7"
 	"github.com/qoeg/aoc2018/day8"
 	"github.com/qoeg/aoc2018/day9"
+	"github.com/qoeg/aoc2018/day10"
 )
 
 func main() {
-	d9()
+	d10()
+}
+
+func d10() {
+	fmt.Print("Day 10\n")
+
+	fmt.Println("Puzzle Answer:")
+	day10.RunOnGrid(day10.NewGrid(134, 116, 206, 134), day10.Input, 10123, 10124)
 }
 
 func d9() {

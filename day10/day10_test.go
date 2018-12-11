@@ -39,5 +39,5 @@ var input = []string{
 }
 
 func Test_Run(t *testing.T) {
-	Run(input)
+	Run(input, 0, 4)
 }

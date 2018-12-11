@@ -1,33 +1,39 @@
 package day10
 
 import (
-	"time"
 	"fmt"
 	"math"
+	"time"
 )
-
-type grid struct {
-	minX int
-	minY int
-	maxX int
-	maxY int
-}
 
 type coordinate struct {
 	x int
 	y int
 }
 
+// Point represents a single x,y point with velocity.
 type Point struct {
 	coordinate
 	vX int
 	vY int
 }
 
-func minX(points map[coordinate]*Point) int {
+// Grid represents a planar space to print points.
+type Grid struct {
+	minX int
+	minY int
+	maxX int
+	maxY int
+}
+
+// NewGrid creates a grid for printing points.
+func NewGrid(minX, minY, maxX, maxY int) Grid {
+	return Grid{minX, minY, maxX, maxY}
+}
+
+func minX(points []*Point) int {
 	min := math.MaxInt32
 	for _, c := range points {
-		if c == nil { continue }
 		if c.x < min {
 			min = c.x
 		}
@@ -35,10 +41,9 @@ func minX(points map[coordinate]*Point) int {
 	return min
 }
 
-func maxX(points map[coordinate]*Point) int {
+func maxX(points []*Point) int {
 	max := 0
 	for _, c := range points {
-		if c == nil { continue }
 		if c.x > max {
 			max = c.x
 		}
@@ -46,10 +51,9 @@ func maxX(points map[coordinate]*Point) int {
 	return max
 }
 
-func minY(points map[coordinate]*Point) int {
+func minY(points []*Point) int {
 	min := math.MaxInt32
 	for _, c := range points {
-		if c == nil { continue }
 		if c.y < min {
 			min = c.y
 		}
@@ -57,10 +61,9 @@ func minY(points map[coordinate]*Point) int {
 	return min
 }
 
-func maxY(points map[coordinate]*Point) int {
+func maxY(points []*Point) int {
 	max := 0
 	for _, c := range points {
-		if c == nil { continue }
 		if c.y > max {
 			max = c.y
 		}
@@ -68,23 +71,31 @@ func maxY(points map[coordinate]*Point) int {
 	return max
 }
 
-func parsePoints(input []string) map[coordinate]*Point {
-	results := make(map[coordinate]*Point, len(input))
+func makeMap(points []*Point) map[coordinate]*Point {
+	result := make(map[coordinate]*Point, len(points))
+	for _, point := range points {
+		result[point.coordinate] = point
+	}
+	return result
+}
+
+func parsePoints(input []string) []*Point {
+	results := []*Point{}
 	for i := range input {
 		var x, y, vX, vY int
 		fmt.Sscanf(input[i], "position=<%d, %d> velocity=<%d, %d>", &x, &y, &vX, &vY)
 
-		results[coordinate{x, y}] = &Point{coordinate{x, y}, vX, vY}
+		results = append(results, &Point{coordinate{x, y}, vX, vY})
 	}
 	return results
 }
 
-func printPoints(g grid, points map[coordinate]*Point) {
+func printPoints(g Grid, points []*Point) {
+	pm := makeMap(points)
 	for y := g.minY; y <= g.maxY; y++ {
 		for x := g.minX; x <= g.maxX; x++ {
-			if points[coordinate{x, y}] != nil {
+			if pm[coordinate{x, y}] != nil {
 				fmt.Print("#")
-				fmt.Printf("(%d,%d[%d,%d])", x, y, points[coordinate{x,y}].vX, points[coordinate{x,y}].vY)
 				continue
 			}
 
@@ -92,7 +103,7 @@ func printPoints(g grid, points map[coordinate]*Point) {
 				fmt.Print("|")
 				continue
 			}
-			
+
 			if y == 0 {
 				fmt.Print("-")
 				continue
@@ -104,39 +115,66 @@ func printPoints(g grid, points map[coordinate]*Point) {
 	}
 }
 
-func updatePoints(points map[coordinate]*Point) {
-	for coord := range points {
-		if points[coord] == nil {continue}
-
-		x := (points[coord].x + points[coord].vX)
-		y := (points[coord].y + points[coord].vY)
-		p := &Point{
+func updatePoints(points []*Point) []*Point {
+	results := []*Point{}
+	for _, p := range points {
+		x := (p.x + p.vX)
+		y := (p.y + p.vY)
+		results = append(results, &Point{
 			coordinate{x, y},
-			points[coord].vX,
-			points[coord].vY,
-		}
-		points[coordinate{p.x, p.y}] = p
-		points[coord] = nil
+			p.vX,
+			p.vY,
+		})
 	}
+	return results
 }
 
-func Run(input []string) {
+// Run runs the progression of the points parsed from the input.
+// It prints to the console the points on an automatically bounded grid.
+func Run(input []string, skip, end int) {
 	points := parsePoints(input)
+
 	minX := minX(points)
 	maxX := maxX(points)
 	minY := minY(points)
 	maxY := maxY(points)
-	g := grid{minX, minY, maxX, maxY}
-	count := 0
-	
-	fmt.Println("Initially:")
-	for {
-		printPoints(g, points)
-		updatePoints(points)
-		
-		time.Sleep(time.Second * 2)
-		count++
+	g := Grid{minX, minY, maxX, maxY}
+
+	RunOnGrid(g, input, skip, end)
+}
+
+// RunOnGrid runs the progression of the points parsed from the input.
+// It prints to the console the points on a predefined grid. Specify a
+// skip and end intiger to skip time and stop at a particular second.
+func RunOnGrid(g Grid, input []string, skip, end int) {
+	p := parsePoints(input)
+
+	if skip == 0 {
+		fmt.Println("Initially:")
+		printPoints(g, p)
 		fmt.Println()
-		fmt.Printf("After seconds: %d\n", count)
+
+		time.Sleep(time.Millisecond * 1000)
+	}
+
+	count := 0
+	next := func() bool {
+		if end < 0 {
+			return false
+		}
+		return count <= end
+	}
+	
+	for next() {
+		if count > skip {
+			fmt.Printf("After seconds: %d\n", count)
+			printPoints(g, p)
+			fmt.Println()
+
+			time.Sleep(time.Millisecond * 1000)
+		}
+
+		p = updatePoints(p)
+		count++
 	}
 }
