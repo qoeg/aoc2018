@@ -4,23 +4,27 @@ import (
 	"fmt"
 )
 
+// Coordinate is a value with x and y parts
 type Coordinate struct {
 	x int
 	y int
 }
 
+// Square represents a square of Coordinates in a Grid
 type Square struct {
 	Coordinate
 	Size int
-	sum int
+	Sum int
 }
 
+// Grid representes an x,y plane of power levels
 type Grid struct {
 	SN int
 	Cells map[int]map[int]int
 	size int
 }
 
+// NewGrid creates a fully populated grid
 func NewGrid(sn, size int) Grid {
 	g := Grid{
 		SN: sn,
@@ -64,14 +68,17 @@ func sumSquare(g Grid, sq Square) int {
 	return sum
 }
 
+// FindAnyLargestSquare finds the largest square of any size
 func FindAnyLargestSquare(g Grid) Square {
 	ch := make(chan Square, g.size)
+	sem := make(chan struct{}, 1)
 
 	for size := 1; size <= g.size; size++ {
+		sem <- struct{}{}
 		go func(size int) {
-			fmt.Printf("Processing size: %d\n", size)
-			sq, _ := FindLargestSquare(g, size)
+			sq := FindLargestSquare(g, size)
 			fmt.Printf("Completed size: %d\n", size)
+			<-sem
 			ch<- sq
 		}(size)
 	}
@@ -79,7 +86,7 @@ func FindAnyLargestSquare(g Grid) Square {
 	max := Square{}
 	for i := 0; i < g.size; i++ {
 		sq := <- ch
-		if sq.sum > max.sum {
+		if sq.Sum > max.Sum {
 			max = sq
 		}
 	}
@@ -87,17 +94,31 @@ func FindAnyLargestSquare(g Grid) Square {
 	return max
 }
 
-func FindLargestSquare(g Grid, size int) (Square, int) {
-	sum := 0
-	max := Square{Coordinate{1, 1}, size, 0}
-	for x := 1; x <= 300-size; x++ {
-		for y := 1; y <= 300-size; y++ {
-			s := sumSquare(g, Square{Coordinate{x, y}, size, 0})
-			if s > sum {
-				max = Square{Coordinate{x, y}, size, s}
-				sum = s
-			}
+// FindLargestSquare finds the largest square fo a specified size
+func FindLargestSquare(g Grid, size int) Square {
+	ch := make(chan Square, 50)
+	sem := make(chan struct{}, 50)
+
+	bound := g.size-size
+	for x := 1; x <= bound; x++ {
+		for y := 1; y <= bound; y++ {
+			sem <- struct{}{}
+			go func(x, y int) {
+				s := sumSquare(g, Square{Coordinate{x, y}, size, 0})
+				<-sem
+				ch<- Square{Coordinate{x, y}, size, s}
+			}(x, y)
 		}
 	}
-	return max, sum
+
+	max := Square{}
+	total := (bound * bound)
+	for i := 0; i < total; i++ {
+		sq := <- ch
+		if sq.Sum > max.Sum {
+			max = sq
+		}
+	}
+
+	return max
 }
