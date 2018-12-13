@@ -14,10 +14,22 @@ import (
 	"github.com/qoeg/aoc2018/day9"
 	"github.com/qoeg/aoc2018/day10"
 	"github.com/qoeg/aoc2018/day11"
+	"github.com/qoeg/aoc2018/day12"
 )
 
 func main() {
-	d11()
+	d12()
+}
+
+func d12() {
+	fmt.Print("Day 12\n")
+
+	frms := day12.Formulas(day12.Input)
+	sum1, _ := day12.DoGenerations(day12.InitialState, frms, 20, true)
+	fmt.Printf("Puzzle 1 Answer: %v\n", sum1)
+
+	sum2, count2 := day12.DoGenerations(day12.InitialState, frms, 120, true)
+	fmt.Printf("Puzzle 2 Answer: %v\n", ((50000000000-120)*count2)+sum2)
 }
 
 func d11() {
