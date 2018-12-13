@@ -18,7 +18,15 @@ import (
 )
 
 func main() {
-	d12()
+	d13()
+}
+
+func d13() {
+	fmt.Print("Day 13\n")
+
+	fmt.Printf("Puzzle 1 Answer: %v\n", 0)
+
+	fmt.Printf("Puzzle 2 Answer: %v\n", 0)
 }
 
 func d12() {
