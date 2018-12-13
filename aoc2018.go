@@ -28,8 +28,8 @@ func d12() {
 	sum1, _ := day12.DoGenerations(day12.InitialState, frms, 20, true)
 	fmt.Printf("Puzzle 1 Answer: %v\n", sum1)
 
-	sum2, count2 := day12.DoGenerations(day12.InitialState, frms, 120, true)
-	fmt.Printf("Puzzle 2 Answer: %v\n", ((50000000000-120)*count2)+sum2)
+	sum2, count2 := day12.DoGenerations(day12.InitialState, frms, 111, true)
+	fmt.Printf("Puzzle 2 Answer: %v\n", ((50000000000-111)*count2)+sum2)
 }
 
 func d11() {
