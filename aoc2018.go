@@ -15,6 +15,7 @@ import (
 	"github.com/qoeg/aoc2018/day10"
 	"github.com/qoeg/aoc2018/day11"
 	"github.com/qoeg/aoc2018/day12"
+	"github.com/qoeg/aoc2018/day13"
 )
 
 func main() {
@@ -24,9 +25,11 @@ func main() {
 func d13() {
 	fmt.Print("Day 13\n")
 
-	fmt.Printf("Puzzle 1 Answer: %v\n", 0)
+	g := day13.NewGrid(day13.Input)
+	for g.Move() {}
 
-	fmt.Printf("Puzzle 2 Answer: %v\n", 0)
+	fmt.Printf("Puzzle 1 Answer: %v\n", g.Crashes[0])
+	fmt.Printf("Puzzle 2 Answer: %v\n", g.Carts[0].Pos)
 }
 
 func d12() {
