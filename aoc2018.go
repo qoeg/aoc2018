@@ -16,10 +16,18 @@ import (
 	"github.com/qoeg/aoc2018/day11"
 	"github.com/qoeg/aoc2018/day12"
 	"github.com/qoeg/aoc2018/day13"
+	"github.com/qoeg/aoc2018/day14"
 )
 
 func main() {
-	d13()
+	d14()
+}
+
+func d14() {
+	fmt.Print("Day 14\n")
+
+	fmt.Printf("Puzzle 1 Answer: %v\n", day14.Answer1(920831, 10))
+	fmt.Printf("Puzzle 2 Answer: %v\n", day14.Answer2("920831", 21000000))
 }
 
 func d13() {
