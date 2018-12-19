@@ -1,4 +1,4 @@
-package util
+package grid
 
 import (
 	"math"
@@ -7,6 +7,14 @@ import (
 type Coordinate struct {
 	X int
 	Y int
+}
+
+type TwoDimensional interface {
+	Pos() Coordinate
+}
+
+func (c Coordinate) Pos() Coordinate {
+	return c
 }
 
 func MinX(coords []Coordinate) int {

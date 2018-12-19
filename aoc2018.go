@@ -15,12 +15,20 @@ import (
 	"github.com/qoeg/aoc2018/day10"
 	"github.com/qoeg/aoc2018/day11"
 	"github.com/qoeg/aoc2018/day12"
-	"github.com/qoeg/aoc2018/day13"
+	//"github.com/qoeg/aoc2018/day13"
 	"github.com/qoeg/aoc2018/day14"
+	"github.com/qoeg/aoc2018/day15"
 )
 
 func main() {
-	d14()
+	d15()
+}
+
+func d15() {
+	fmt.Print("Day 15\n")
+
+	fmt.Printf("Puzzle 1 Answer: %v\n", day15.Answer())
+	fmt.Printf("Puzzle 2 Answer: %v\n", 0)
 }
 
 func d14() {
@@ -30,15 +38,15 @@ func d14() {
 	fmt.Printf("Puzzle 2 Answer: %v\n", day14.Answer2("920831", 21000000))
 }
 
-func d13() {
-	fmt.Print("Day 13\n")
+// func d13() {
+// 	fmt.Print("Day 13\n")
 
-	g := day13.NewGrid(day13.Input)
-	for g.Move() {}
+// 	g := day13.NewGrid(day13.Input)
+// 	for g.Move() {}
 
-	fmt.Printf("Puzzle 1 Answer: %v\n", g.Crashes[0])
-	fmt.Printf("Puzzle 2 Answer: %v\n", g.Carts[0].Pos)
-}
+// 	fmt.Printf("Puzzle 1 Answer: %v\n", g.Crashes[0])
+// 	fmt.Printf("Puzzle 2 Answer: %v\n", g.Carts[0].Pos)
+// }
 
 func d12() {
 	fmt.Print("Day 12\n")
