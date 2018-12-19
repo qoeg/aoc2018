@@ -17,6 +17,7 @@ func totalHp(units []*unit) int {
 func Answer() int {
 	units := []*unit{}
 	g := grid.ParseOut(Input, replaceFor(&units))
+	grid.Grid(g).Print(renderable(units)...)
 
 	var done bool
 	var rounds = -1

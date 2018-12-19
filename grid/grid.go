@@ -6,6 +6,17 @@ import (
 
 type Grid [][]Cell
 
+func (g Grid) Clone() Grid {
+	clone := [][]Cell{}
+	for x := 0; x < len(g); x++ {
+		clone = append(clone, []Cell{})
+		for y := 0; y < len(g[x]); y++ {
+			clone[x] = append(clone[x], g[x][y])
+		}
+	}
+	return clone
+}
+
 func (g Grid) Neighbors(p TwoDimensional, include ...rune) []Cell {
 	n := []Cell{}
 	if len(g) == 0 || len(g[0]) == 0 {
@@ -62,16 +73,18 @@ func (g Grid) Print(objs ...Renderable) {
 		}
 		fmt.Println()
 	}
+	fmt.Println()
 }
 
 func (g Grid) With(objs ...Renderable) Grid {
+	clone := g.Clone()
 	for _, o := range objs {
-		g[o.Pos().X][o.Pos().Y] = Cell{
+		clone[o.Pos().X][o.Pos().Y] = Cell{
 			mark: o.Mark(),
 			pos: o.Pos(),
 		}
 	}
-	return g
+	return clone
 }
 
 func Parse(input string) (grid [][]Cell) {
