@@ -23,45 +23,54 @@ func (u *unit) Pos() grid.Coordinate {
 	return u.pos
 }
 
-func (u *unit) attack(target *unit) (killed *unit) {
-	// TODO: damage target
-	return killed
-}
+func (u *unit) attack(targets []*unit) (*unit, bool) {
+	if len(targets) == 0 {
+		return nil, false
+	}
+	
+	attacked := targets[0]
+	mins := []*unit{attacked}
 
-func (u *unit) nextStep(cells [][]grid.Cell, units []*unit, targets []*unit) (grid.Coordinate, bool) {
-	var visited [][]bool
-	for x := range cells {
-		visited = append(visited, []bool{})
-		for y := 0; y < len(cells[x]); y++ {
-			visited[x] = append(visited[x], false)
+	for i := 1; i < len(targets); i++ {
+		if targets[i].hp < mins[0].hp {
+			mins = []*unit{targets[i]}
+		} else if targets[i].hp == mins[0].hp {
+			mins = append(mins, targets[i])
 		}
 	}
+
+	if len(mins) > 0 {
+		attacked = mins[0]
+	}
+	
+	attacked.hp -= u.atk
+
+	return attacked, attacked.hp <= 0
+}
+
+func (u *unit) nextStep(cells [][]grid.Cell, us units, targets units) (grid.Cell, bool) {
+	visited := map[grid.Coordinate]bool{}
+	visited[u.pos] = true
 	
 	t := grid.NewTree(cells[u.pos.X][u.pos.Y])
 	queue := grid.TreeByReadOrder(*t)
 	heap.Init(&queue)
 
-	visited[u.pos.X][u.pos.Y] = true
-
 	for queue.Len() > 0 {
-		//fmt.Println("Queue", queue)
 		node := heap.Pop(&queue).(*grid.Node)
-		//fmt.Println("Using", node)
-		if findUnit(targets, node.Pos()) != nil {
+		if len(targets.where(node.Value)) > 0 {
 			path := node.Path()
-			//fmt.Println("Found path", path)
 			return path[1], true
 		}
-		for _, n := range grid.Grid(cells).With(renderable(units)...).Neighbors(node, '.', u.enemy()) {
-			if !visited[n.Pos().X][n.Pos().Y] {
-				visited[n.Pos().X][n.Pos().Y] = true
-				//fmt.Println("Visited ", n)
-				heap.Push(&queue, grid.NewNode(grid.Coordinate{X:n.Pos().X, Y:n.Pos().Y}, node))
+		for _, n := range grid.Grid(cells).With(us.cells()).Neighbors(node, '.', u.enemy()) {
+			if !visited[n.Pos()] {
+				visited[n.Pos()] = true
+				heap.Push(&queue, grid.NewNode(n, node))
 			}
 		}
 	}
 	
-	return grid.Coordinate{}, false
+	return grid.Cell{}, false
 }
 
 func (u *unit) enemies(units []*unit) []*unit {
@@ -79,55 +88,60 @@ func (u *unit) enemy() rune {
 	return 'E'
 }
 
-func (u *unit) move(cells *[][]grid.Cell, units []*unit) (target *unit, none bool) {
-	targets := u.enemies(units)
+func (u *unit) move(cells *[][]grid.Cell, us units) (targets units, none bool) {
+	targets = units(u.enemies(us))
 	if len(targets) == 0 {
-		return nil, true
+		return targets, true
 	}
 
 	// if adjacent to an enemy, just attack
-	adjEnemies := grid.Grid(*cells).With(renderable(targets)...).Neighbors(u, u.enemy())
+	adjEnemies := grid.Grid(*cells).With(targets.cells()).Neighbors(u, u.enemy())
 	if len(adjEnemies) > 0 {
-		return findUnit(units, adjEnemies[0].Pos()), false
+		return us.where(adjEnemies...), false
 	}
 
 	// find the best path to a target
-	if step, yes := u.nextStep(*cells, units, targets); yes {
+	if step, yes := u.nextStep(*cells, us, targets); yes {
 		u.pos = step.Pos()
 
 		// check if adjacent to enemy after moving
-		adjEnemies = grid.Grid(*cells).With(renderable(targets)...).Neighbors(u, u.enemy())
+		adjEnemies = grid.Grid(*cells).With(targets.cells()).Neighbors(u, u.enemy())
 		if len(adjEnemies) > 0 {
-			return findUnit(units, adjEnemies[0].Pos()), false
+			return us.where(adjEnemies...), false
 		}
 	}
 
-	return nil, false
+	return units{}, false
 }
 
-func findUnit(units []*unit, c grid.Coordinate) *unit {
-	for _, u := range units {
-		if u.pos == c {
-			return u
+type units []*unit
+
+func (us units) cells() []grid.Cell {
+	res := []grid.Cell{}
+	for _, unit := range us {
+		res = append(res, grid.NewCell(unit.mark, unit.pos))
+	}
+	return res
+}
+
+func (us units) where(cs ...grid.Cell) units {
+	res := units{}
+	for i := range cs {
+		for j := range us {
+			if cs[i] == grid.NewCell(us[j].mark, us[j].pos) {
+				res = append(res, us[j])
+			}
 		}
 	}
-	return nil
+	return res
 }
 
-func remove(units []*unit, match *unit) {
-	for i, u := range units[:] {
+func remove(us *[]*unit, match *unit) {
+	for i, u := range (*us)[:] {
 		if u == match {
-			units = append(units[:i], units[i+1:]...)
+			*us = append((*us)[:i], (*us)[i+1:]...)
 		}
 	}
-}
-
-func renderable(units []*unit) []grid.Renderable {
-	r := make([]grid.Renderable, len(units))
-	for i, u := range units {
-		r[i] = u
-	}
-	return r
 }
 
 func replaceFor(u *[]*unit) func(grid.Cell) rune {

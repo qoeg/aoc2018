@@ -60,7 +60,7 @@ func (g Grid) Print(objs ...Renderable) {
 			masked := false
 			for i, o := range objs {
 				if (o.Pos() == Coordinate{x, y}) {
-					fmt.Print(string(o.Mark()))
+					fmt.Print(o)
 					objs = append(objs[:i], objs[i+1:]...)
 					masked = true
 					break
@@ -76,13 +76,10 @@ func (g Grid) Print(objs ...Renderable) {
 	fmt.Println()
 }
 
-func (g Grid) With(objs ...Renderable) Grid {
+func (g Grid) With(cells []Cell) Grid {
 	clone := g.Clone()
-	for _, o := range objs {
-		clone[o.Pos().X][o.Pos().Y] = Cell{
-			mark: o.Mark(),
-			pos: o.Pos(),
-		}
+	for _, c := range cells {
+		clone[c.Pos().X][c.Pos().Y] = c
 	}
 	return clone
 }

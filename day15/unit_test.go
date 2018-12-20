@@ -26,7 +26,7 @@ func Test_unit_bestPath(t *testing.T) {
 		name string
 		u    *unit
 		args args
-		want grid.Coordinate
+		want grid.Cell
 	}{
 		{
 			name: "1",
@@ -36,7 +36,7 @@ func Test_unit_bestPath(t *testing.T) {
 				units: units,
 				targets: units[0].enemies(units),
 			},
-			want: grid.Coordinate{X:2, Y:1},
+			want: g[2][1],
 		},
 		{
 			name: "2",
@@ -46,7 +46,7 @@ func Test_unit_bestPath(t *testing.T) {
 				units: units,
 				targets: units[1].enemies(units),
 			},
-			want: grid.Coordinate{X:3, Y:1},
+			want: g[3][1],
 		},
 		{
 			name: "3",
@@ -56,7 +56,7 @@ func Test_unit_bestPath(t *testing.T) {
 				units: units,
 				targets: units[2].enemies(units),
 			},
-			want: grid.Coordinate{X:2, Y:2},
+			want: g[2][2],
 		},
 		{
 			name: "4",
@@ -66,7 +66,7 @@ func Test_unit_bestPath(t *testing.T) {
 				units: units,
 				targets: units[3].enemies(units),
 			},
-			want: grid.Coordinate{X:0, Y:0},
+			want: grid.Cell{},
 		},
 	}
 	for _, tt := range tests {

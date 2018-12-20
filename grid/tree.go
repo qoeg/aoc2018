@@ -8,10 +8,10 @@ type Node struct{
 	index int
 	parent *Node
 	children []*Node
-	Value Coordinate
+	Value Cell
 }
 
-func NewNode(c Coordinate, p *Node) *Node {
+func NewNode(c Cell, p *Node) *Node {
 	n := &Node{
 		parent: p,
 		children: []*Node{},
@@ -21,12 +21,12 @@ func NewNode(c Coordinate, p *Node) *Node {
 	return n
 }
 
-func (n *Node) Path() []Coordinate {
-	path := []Coordinate{n.Value}
+func (n *Node) Path() []Cell {
+	path := []Cell{n.Value}
 
 	p := n.parent
 	for p != nil {
-		path = append([]Coordinate{p.Value}, path...)
+		path = append([]Cell{p.Value}, path...)
 		p = p.parent
 	}
 
@@ -34,7 +34,7 @@ func (n *Node) Path() []Coordinate {
 }
 
 func (n *Node) Pos() Coordinate {
-	return n.Value
+	return n.Value.Pos()
 }
 
 func (n *Node) String() string {
@@ -42,7 +42,7 @@ func (n *Node) String() string {
 	if n.parent != nil {
 		p = "node"
 	}
-	return fmt.Sprintf("<P[%s] {%d,%d}>", p, n.Value.X, n.Value.Y)
+	return fmt.Sprintf("<P[%s] {%d,%d}>", p, n.Value.Pos().X, n.Value.Pos().Y)
 }
 
 type Tree []*Node
@@ -52,7 +52,7 @@ func NewTree(root Cell) *Tree {
 	t[0] = &Node{
 		parent: nil,
 		children: []*Node{},
-		Value: root.pos,
+		Value: root,
 	}
 	return &t
 }
@@ -84,10 +84,10 @@ func (t TreeByReadOrder) Swap(i, j int) {
 }
 
 func (t TreeByReadOrder) Less(i, j int) bool {
-	if t[i].Value.Y == t[j].Value.Y {
-		return t[i].Value.X < t[j].Value.X
+	if t[i].Value.Pos().Y == t[j].Value.Pos().Y {
+		return t[i].Value.Pos().X < t[j].Value.Pos().X
 	}
-	return t[i].Value.Y < t[j].Value.Y
+	return t[i].Value.Pos().Y < t[j].Value.Pos().Y
 }
 
 func (t *TreeByReadOrder) Push(x interface{}) {

@@ -10,9 +10,13 @@ type Cell struct {
 	pos Coordinate
 }
 
+func NewCell(mark rune, pos Coordinate) Cell {
+	return Cell{0, mark, pos}
+}
+
 type Renderable interface {
-	Mark() rune
 	Pos() Coordinate
+	String() string
 }
 
 func (c Cell) Mark() rune {
@@ -21,6 +25,10 @@ func (c Cell) Mark() rune {
 
 func (c Cell) Pos() Coordinate {
 	return c.pos
+}
+
+func (c Cell) String() string {
+	return string(c.mark)
 }
 
 type cellByReadOrder []Cell
